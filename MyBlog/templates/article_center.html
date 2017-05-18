@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block blogs %}
+    <div class="col-md-8 " style="min-height: 800px">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table" style="margin-top: 35px">
+                    <thead>
+                        <tr>
+
+                            <th>文章列表</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for obj in articles %}
+                        <tr>
+                            <td class="col-md-8">{{ obj.title|truncatechars:30 }}</td>
+                            <td class="col-md-1"><a href="{% url "article_modify" obj.id %}">修改</a></td>
+                            <td class="col-md-2">
+                                <a href="#" class="delete">删除</a>
+                                <i style="display: none;" class="article_id">{{ obj.id }}</i>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+{% block script %}
+    <script>
+
+        $(".delete").click(function () {
+            $.ajaxSetup({
+                 data: {csrfmiddlewaretoken: '{{ csrf_token }}' }
+            });
+            var id=$(this).next(".article_id").text();
+            var obj=$(this);
+            var objects=$(this).parent().siblings();
+            $.ajax({
+                type:"POST",
+                data:{article_id:id},
+                url:"{% url "article_delete" %}",
+                datatype:"html",
+                success:function () {
+                    objects.each(function () {
+                        $(this).remove();
+                    });
+                    obj.text("删除成功");
+                    obj.removeClass();
+                }
+            });
+        });
+    </script>
+{% endblock %}

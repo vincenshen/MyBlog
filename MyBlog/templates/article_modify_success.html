@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block blogs %}
+    <div class="col-md-8 " style="min-height: 800px">
+        <div class="col-md-offset-5" style="margin-top: 30px">
+            <div><h4>文章修改成功!</h4></div>
+            <div><a href="{% url "article_center" request.user.id %}">返回文章列表</a></div>
+        </div>
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!--[if IE]>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <![endif]-->
+    <title>My Blogs</title>
+    <!-- BOOTSTRAP CORE STYLE -->
+    <link href="{% static "css/bootstrap.css" %}" rel="stylesheet" />
+    <!-- FONT AWESOME ICON STYLE -->
+    <link href="{% static "css/font-awesome.css" %}" rel="stylesheet" />
+    <!-- CUSTOM STYLE CSS -->
+    <link href="{% static "css/style.css" %}" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="info-sec">
+        <div class="container">
+            <div class="row">
+                <div class="left">
+                    Say hello to me at <strong>hello</strong>@oldboy.com
+                </div>
+
+                <div class="right">
+                    {% if request.user.is_authenticated %}
+                    <div class="login">
+                        <a href="" style="color:#fff; font-size: 18px">Dear&nbsp;{{ request.user.username }}, welcome!</a>
+                        <a href="{% url "logout" %}" class="btn btn-default">注销</a>
+                    </div>
+                    {% else %}
+                    <div class="no-login">
+                        <a href="#" class="btn btn-default" data-toggle="modal" data-target="#Register">注册</a>
+                        <a href="#" class="btn btn-default" data-toggle="modal" data-target="#Login">登录</a>
+                    </div>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div id="header">
+        <div class="overlay">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3 logo-div">
+                        <div class="logo-inner text-center">
+                            <div class="logo-name">
+                                <a href="#">
+                                    <img src="{% static "img/me.jpg" %}" class="img-circle" />
+                                </a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="col-md-9 header-text-top " id="about">
+                        <h1>Oldboy 教育名言</h1>
+						学习python就像人生中的一个十字路口，很多人犹豫徘徊，分析哪个利大，哪个利大，然而往往先走一步的人会让你望尘莫及！ <br />
+						还等什么，赶紧报名吧！<br />
+						<h2><strong>Who I am ? </strong></h2>
+                        <i>I am Oldboy. </i>
+                    </div>
+                    <div>
+                        <span class="col-md-1">
+                            <a href="{% url "index" %}" style="color: white; font-size: 15px">博客首页</a>
+                        </span>
+                    {% if request.user.is_authenticated %}
+                        <span class="col-md-1">
+                            <a href="{% url "create_article" %}" style="color: white; font-size: 15px">添加文章</a>
+                        </span>
+                        <span class="col-md-1">
+                            <a href="{% url "article_center" request.user.id %}" style="color: white; font-size: 15px">我的文章</a>
+                        </span>
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--END HEADER SECTION-->
+    <!--END INFO SECTION-->
+    <div class="container">
+
+        <div class="row">
+            {% block blogs %}
+
+            {% endblock %}
+
+            <div class="col-md-1"></div>
+            <div class="col-md-3" style="padding-top: 30px;">
+				<div class="row">
+                    <div style="margin-bottom: 20px">
+                        <form id="search-form" action="?keywords=" method="get">
+                            <input type="text" name="keywords" style="height: 30px;border-radius: 5px" placeholder="文章关键字搜索">
+                            <a id="search"><i class="fa fa-search fa-2x" aria-hidden="true" style="cursor: pointer;">&nbsp;</i></a>
+                        </form>
+                    </div>
+
+
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong><a href="?category_id=">所有类别</a></strong></li>
+                        {% for obj in category %}
+                        <li class="list-group-item"><a href="?category_id={{ obj.id }}">{{ obj.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+				</div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!--END HOME PAGE SECTION-->
+
+
+    <div class="footer-sec">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 foo-inner">
+                    &copy; 2015 http://www.cnblogs.com/vincenshen | More Information <a href="#" target="_blank" title="">沈洪兵</a> - Collect from <a href="#" title="" target="_blank">oldboy</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="Register" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Register</h4>
+          </div>
+          <form id="reg-form">
+              <div class="modal-body col-md-offset-3 reg-ok" style="width: 300px; min-height: 150px">
+                  <div class="form-group reg-remove">
+                    <label for="recipient-name" class="control-label">Username:</label>
+                    <input id="reg-username" type="text" class="form-control" name="reg-username">
+                      <p id="reg-p-u"></p><i id="reg-i-u" style="display: none">1</i>
+                  </div>
+
+                  <div class="form-group reg-remove">
+                    <label for="recipient-name" class="control-label">Password:</label>
+                    <input id="reg-password" type="password" class="form-control" name="reg-password">
+                  </div>
+                  <div class="form-group reg-remove">
+                    <label for="recipient-name" class="control-label">Password Confirm:</label>
+                    <input id="reg-password2" type="password" class="form-control" name="reg-password2">
+                      <p id="reg-p-p"></p><i id="reg-i-p" style="display: none">1</i>
+                  </div>
+              </div>
+              <div class="modal-footer reg-remove">
+                  <input type="button" class="btn btn-default" data-dismiss="modal" value="Close">
+                  <input id="reg-submit" style="width: 80px" type="submit" class="btn btn-primary" value="Register" disabled="disabled">
+              </div>
+              {% csrf_token %}
+          </form>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+    <div class="modal fade" id="Login" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="login-form">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Login</h4>
+              </div>
+              <div class="modal-body col-md-offset-3" style="width: 300px">
+                  <div class="form-group">
+                    <label for="recipient-name" class="control-label">Username:</label>
+                    <input id="login-username" type="text" class="form-control" name="username">
+                  </div>
+                  <div class="form-group">
+                    <label for="recipient-name" class="control-label">Password:</label>
+                    <input id="login-password" type="password" class="form-control" name="password">
+                      <p id="login-p"></p>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <input type="button" class="btn btn-default" data-dismiss="modal" value="Close">
+                  <input style="width: 80px" type="submit" class="btn btn-primary" value="Login">
+              </div>
+                {% csrf_token %}
+            </form>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+    <!-- END FOOTER SECTION -->
+    <!-- JAVASCRIPT FILES PLACED AT THE BOTTOM TO REDUCE THE LOADING TIME -->
+    <!-- CORE JQUERY -->
+    <script src="{% static "js/jquery-1.11.1.js" %}"></script>
+    <!-- BOOTSTRAP SCRIPTS -->
+    <script src="{% static "js/bootstrap.js" %}"></script>
+    {% block script %}
+    {% endblock %}
+
+    <script>
+        $("#reg-username").blur(function () {
+            $.ajaxSetup({
+            data: {csrfmiddlewaretoken: '{{ csrf_token }}'}
+            });
+            $.ajax({
+                type:"POST",
+                data:{username:$("#reg-username").val()},
+                url:"{% url "register" %}",
+                datatype:"html",
+                success:function (result) {
+                    if(result=="no"){
+                        $("#reg-p-u").css("color","red").text("用户名已存在！");
+                        $("#reg-i-u").text(0);
+                    }else{
+                        $("#reg-p-u").text("");
+                        $("#reg-i-u").text(1)
+                    }
+                }
+            });
+            var val=Number($("#reg-i-u").text())+Number($("#reg-i-p").text());
+            if(val==2){
+                $("#reg-submit").removeAttr("disabled")
+            }else {
+                $("#reg-submit").attr("disabled","disabled");
+            }
+        });
+        $("#reg-password2").blur(function () {
+            var pass1 = $("#reg-password").val();
+            var pass2 = $(this).val();
+            if(pass1!=pass2){
+                $("#reg-p-p").css("color","red").text("两次密码不一致！");
+                $("#reg-i-p").text(0)
+            }else {
+                $("#reg-p-p").text("");
+                $("#reg-i-p").text(1);
+            }
+            var val=Number($("#reg-i-u").text())+Number($("#reg-i-p").text());
+            if(val==2){
+                $("#reg-submit").removeAttr("disabled");
+            }else {
+                $("#reg-submit").attr("disabled","disabled");
+            }
+        });
+        $("#login-form").submit(function () {
+            $.ajaxSetup({
+            data: {csrfmiddlewaretoken: '{{ csrf_token }}'}
+            });
+            $.ajax({
+                type:"POST",
+                data:{username:$("#login-username").val(),password:$("#login-password").val()},
+                url:"{% url "login" %}",
+                dataType:"html",
+                success:function (result) {
+                    if(result=="false"){
+                        $("#login-p").css("color","red").text("username or password error!");
+                    }else {
+                        window.location.href="{% url "index" %}";
+                    }
+                }
+            });
+            return false;
+        });
+        $("#reg-form").submit(function () {
+            $.ajaxSetup({
+            data: {csrfmiddlewaretoken: '{{ csrf_token }}'}
+            });
+
+            $.ajax({
+                type:"POST",
+                data:{username:$("#reg-username").val(), password:$("#reg-password").val()},
+                url:"{% url "register" %}",
+                dataType:"html",
+                success:function (result) {
+                    if(result=="ok"){
+                        $(".reg-remove").remove();
+                        $(".reg-ok").html('恭喜您注册成功！<a href="#" data-toggle="modal" data-target="#Login">点击我登录...</a>');
+                    }
+                }
+            });
+            return false;
+        });
+        $("#search").click(function () {
+            $("#search-form").submit();
+        })
+    </script>
+
+</body>
+</html>

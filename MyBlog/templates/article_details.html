@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block blogs %}
+    <div class="col-md-8 " style="min-height: 800px">
+        <div class="body">
+            <h1>{{ article.title }}</h1>
+            <div class="meta">
+                <i class="fa fa-user"> {{ article.author }}</i>
+                <i class="fa fa-calendar"> {{ article.mod_date|date:"Y-m-d H:i:s" }}</i>
+
+            </div>
+            <P>{{ article.content }}</P>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,29 @@
+﻿{% extends "base.html" %}
+
+{% block blogs %}
+    <div class="col-md-8 " style="min-height: 800px">
+        {% for obj in articles %}
+        <div class="blog-post">
+            <h1><strong>{{ obj.title }}</strong></h1>
+            <h4>Posted @ <a href="#">{{ obj.author }}</a> {{ obj.mod_date| date:"Y-m-d H:i:s" }}</h4>
+            <p>{{ obj.content|truncatechars:100 }}</p>
+            <a href="{% url "detail" obj.id %}" class="btn btn-default ">Read More <i class="fa fa-angle-right"></i></a>
+        </div>
+        {% endfor %}
+
+        <nav class="col-md-offset-5">
+            <ul class="pagination" style="list-style: none">
+            {% if articles.has_previous %}
+                <li class="long"><a class="long" href="?page={{ articles.previous_page_number }}">上一页</a></li>
+            {% endif %}
+            <span class="current">
+                <li class="long">&nbsp; Page {{ articles.number }} of {{ articles.paginator.num_pages }}&nbsp;</li>
+            </span>
+            {% if articles.has_next %}
+                <li class="long"><a href="?page={{ articles.next_page_number }}">下一页</a></li>
+            {% endif %}
+            </ul>
+        </nav>
+    </div>
+{% endblock %}
+
